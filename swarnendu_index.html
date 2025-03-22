@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css"> <!-- Linking external CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2b3a67;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .dashboard-container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+            background: #3b4b83;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        .dashboard-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #5566aa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .card span {
+            display: block;
+            font-size: 24px;
+            font-weight: normal;
+            color: yellow;
+            margin-top: 5px;
+        }
+        .chart-container {
+            margin-top: 40px;
+            background: #3b4b83;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2 class="dashboard-title">📊 SOCIAL MEDIA ANALYTICS</h2>
+        <div class="grid-container">
+            <div class="card">Platform <span id="platform">-</span></div>
+            <div class="card">Total Posts <span id="posts">0</span></div>
+            <div class="card">Total Likes ❤️ <span id="likes">0</span></div>
+            <div class="card">Total Shares 🔄 <span id="shares">0</span></div>
+            <div class="card">Total Views 👀 <span id="views">0</span></div>
+            <div class="card">Total Comments 💬 <span id="comments">0</span></div>
+            <div class="card">Timestamp 🕒 <span id="timestamp">-</span></div>
+        </div>
+    </div>
+    
+    <div class="chart-container">
+        <canvas id="statsChart"></canvas>
+    </div>
+    
+    <script>
+        const apiUrl = "https://ztyu64pxv0.execute-api.ap-south-1.amazonaws.com/dev"; // Replace with your actual API URL
+        
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const post = JSON.parse(data.body)[0];
+                document.getElementById("platform").innerText = post.Platform || "-";
+                document.getElementById("posts").innerText = post.PostID ? 1 : "0";
+                document.getElementById("likes").innerText = post.Likes || "0";
+                document.getElementById("shares").innerText = post.Shares || "0";
+                document.getElementById("views").innerText = post.Views || "0";
+                document.getElementById("comments").innerText = post.Comments || "0";
+                document.getElementById("timestamp").innerText = new Date(post.Timestamp).toLocaleString() || "-";
+                
+                // Chart.js Stats Graph
+                const ctx = document.getElementById("statsChart").getContext("2d");
+                new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: ["Likes", "Shares", "Views", "Comments"],
+                        datasets: [{
+                            label: "Engagement Statistics",
+                            data: [post.Likes, post.Shares, post.Views, post.Comments],
+                            backgroundColor: "rgba(255, 99, 132, 0.2)",
+                            borderColor: "rgba(255, 99, 132, 1)",
+                            borderWidth: 2,
+                            pointBackgroundColor: "#fff",
+                            pointBorderColor: "rgba(255, 99, 132, 1)",
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+    </script>
+</body>
+</html>
