@@ -1,6 +1,9 @@
 📊 Social Media Dashboard using AWS
 
-Author: Swarnendu ChakrabortyProject Name: Cloud-Based Social Media DashboardHosting: Amazon S3API Integration: AWS API Gateway + Lambda + DynamoDB
+Author: Swarnendu Chakraborty
+Project Name: Cloud-Based Social Media Dashboard
+Hosting: Amazon S3
+API Integration: AWS API Gateway + Lambda + DynamoDB
 
 🌟 Project Overview
 
